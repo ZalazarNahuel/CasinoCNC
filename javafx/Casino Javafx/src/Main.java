@@ -39,10 +39,12 @@ public class Main extends Application {
     private void menuGenerala(){
 
         BorderPane root = new BorderPane();
-        //root.getChildren().addAll(textMenuGenerala(),btnesMenuGenerala(),btnBackMenuGenerala());
-        root.setCenter(btnesMenuGenerala());
-        root.setLeft(btnBackMenuGenerala());
+        
         root.setTop(textMenuGenerala());
+        root.setLeft(btnBackMenuGenerala());
+        root.setCenter(btnesMenuGenerala()); 
+        root.setRight(btnBackMenuGenerala());
+        
         Scene menuGenerala = new Scene(root,650,550);
 
         window.setScene(menuGenerala);
@@ -116,7 +118,7 @@ public class Main extends Application {
         VBox panelV = new VBox(tituloMenuGenerala(),texto);
         panelV.setSpacing(100);
         panelV.setAlignment(Pos.TOP_CENTER);
-
+        
         return panelV;
     }
     private VBox btnesMenuGenerala(){
@@ -131,24 +133,21 @@ public class Main extends Application {
         btnCuatro.setPrefSize(150,50);
 
         VBox panelV = new VBox(btnDos,btnTres,btnCuatro);
-        panelV.setAlignment(Pos.CENTER);
         panelV.setSpacing(20);
-
+        panelV.setPadding(new Insets(25,0,0,0));
+        panelV.setAlignment(Pos.TOP_CENTER);
 
         return panelV;
     }
-    private GridPane btnBackMenuGenerala(){
+    private HBox btnBackMenuGenerala(){
         Button btnBack = new Button("<- BACK");
         btnBack.setOnAction(event -> menuPrincial());
         btnBack.setPrefSize(100,50);
 
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10,10,10,10));
-        pane.setConstraints(btnBack,0,1);
-        pane.getChildren().addAll(btnBack);
-        pane.setAlignment(Pos.BOTTOM_LEFT);
-
-        return pane;
+        HBox panelH = new HBox(btnBack);
+        panelH.setPadding(new Insets(0,0,10,10));
+        panelH.setAlignment(Pos.BOTTOM_LEFT);
+        return panelH;
     }
 
 
