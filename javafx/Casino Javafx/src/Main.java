@@ -39,11 +39,11 @@ public class Main extends Application {
     private void menuGenerala(){
 
         BorderPane root = new BorderPane();
-        
+
         root.setTop(textMenuGenerala());
         root.setLeft(btnBackMenuGenerala());
-        root.setCenter(btnesMenuGenerala()); 
-        root.setRight(btnBackMenuGenerala());
+        root.setCenter(btnesMenuGenerala());
+        root.setRight(espacioVacio());
         
         Scene menuGenerala = new Scene(root,650,550);
 
@@ -149,6 +149,11 @@ public class Main extends Application {
         panelH.setAlignment(Pos.BOTTOM_LEFT);
         return panelH;
     }
+    private Label espacioVacio(){
+        Label texto = new Label();
+        texto.setPrefSize(100,50);
 
+        return texto;
+    }
 
 }
