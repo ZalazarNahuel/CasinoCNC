@@ -4,6 +4,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,7 +33,9 @@ public class Main extends Application {
     private void menuPrincial(){
 
         StackPane root = new StackPane();
-        root.getChildren().addAll(tituloMenuPrincipal(),btnesMenuPrincipal());
+        
+
+        root.getChildren().addAll(backgroundMenuPrincipal(),btnesMenuPrincipal());
         Scene menuPrincipal  = new Scene(root,650,550);
 
         window.setScene(menuPrincipal);
@@ -41,7 +46,7 @@ public class Main extends Application {
         BorderPane root = new BorderPane();
 
         root.setTop(textMenuGenerala());
-        root.setLeft(btnBackMenuGenerala());
+        root.setLeft(btnBackMenuPrincipal());
         root.setCenter(btnesMenuGenerala());
         root.setRight(espacioVacio());
         
@@ -65,12 +70,26 @@ public class Main extends Application {
         Scene menuBlackjack = new Scene(root,650,550);
         window.setScene(menuBlackjack);
     }
-    private void jugarGenerala(int cantJugadores){
-        StackPane root = new StackPane();
-        root.getChildren().addAll(tituloMenuGenerala());
-        Scene jugarGenerala = new Scene(root,650,550);
+    private void ingresarJugadores(int cantJugadores){
+        BorderPane root = new BorderPane();
 
-        window.setScene(jugarGenerala);
+        root.setTop(textIngresarJugadores());
+        root.setLeft(btnBackMenuGenerala());
+        root.setCenter(JugadoresInput(cantJugadores));
+        root.setRight(btnJugar());
+        
+        Scene ingresarJugadores = new Scene(root,650,550);
+
+        window.setScene(ingresarJugadores);
+    }
+    private void jugarGenerala(){
+
+    }
+    private ImageView backgroundMenuPrincipal(){
+        Image imagenMenuPrincipal = new Image("file:imagenes/menuPrincipal.jpg");
+        ImageView bg = new ImageView(imagenMenuPrincipal);
+
+        return bg;
     }
     private VBox tituloMenuPrincipal(){
         Label titulo = new Label();
@@ -82,19 +101,33 @@ public class Main extends Application {
         panelV.setAlignment(Pos.TOP_CENTER);
         return panelV;
     }
+    private Background background(Image imagen){
+        BackgroundImage backgroundImage = new BackgroundImage( imagen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        Background background = new Background(backgroundImage);
+        return background;
+    }
     private VBox btnesMenuPrincipal(){
-        Button btnGenerala = new Button("GENERALA");
+        Button btnGenerala = new Button();
+        Image imagenGenerala = new Image("file:imagenes/Boton-Generala.png");
+        btnGenerala.setBackground(background(imagenGenerala));
         btnGenerala.setOnAction(event -> menuGenerala());
-        btnGenerala.setMinSize(150,50);
-        Button btnBlackjack = new Button("BLACKJACK");
+        btnGenerala.setPrefSize(imagenGenerala.getWidth(),imagenGenerala.getHeight());
+
+        Button btnBlackjack = new Button();
+        Image imagenBlackjack = new Image("file:imagenes/Boton-Blackjack.png");
+        btnBlackjack.setBackground(background(imagenBlackjack));
         btnBlackjack.setOnAction(event -> menuBlackjack());
-        btnBlackjack.setMinSize(150,50);
-        Button btnExit = new Button("EXIT");
+        btnBlackjack.setPrefSize(imagenBlackjack.getWidth(),imagenBlackjack.getHeight());
+
+        Button btnExit = new Button("");
+        Image imagenExit = new Image("file:imagenes/Boton-Exit.png");
+        btnExit.setBackground(background(imagenExit));
         btnExit.setOnAction(event -> closeApp());
-        btnExit.setMinSize(150,50);
+        btnExit.setPrefSize(imagenExit.getWidth(),imagenExit.getHeight());
 
         VBox panelV = new VBox(btnGenerala,btnBlackjack,btnExit);
         panelV.setAlignment(Pos.CENTER);
+        panelV.setPadding(new Insets(150,0,0,20));
         panelV.setSpacing(20);
 
         return panelV;
@@ -123,13 +156,13 @@ public class Main extends Application {
     }
     private VBox btnesMenuGenerala(){
         Button btnDos = new Button("2");
-        btnDos.setOnAction(event -> jugarGenerala(2));
+        btnDos.setOnAction(event -> ingresarJugadores(2));
         btnDos.setPrefSize(150,50);
         Button btnTres = new Button("3");
-        btnTres.setOnAction(event -> jugarGenerala(3));
+        btnTres.setOnAction(event -> ingresarJugadores(3));
         btnTres.setPrefSize(150,50);
         Button btnCuatro = new Button("4");
-        btnCuatro.setOnAction(event -> jugarGenerala(4));
+        btnCuatro.setOnAction(event -> ingresarJugadores(4));
         btnCuatro.setPrefSize(150,50);
 
         VBox panelV = new VBox(btnDos,btnTres,btnCuatro);
@@ -139,7 +172,7 @@ public class Main extends Application {
 
         return panelV;
     }
-    private HBox btnBackMenuGenerala(){
+    private HBox btnBackMenuPrincipal(){
         Button btnBack = new Button("<- BACK");
         btnBack.setOnAction(event -> menuPrincial());
         btnBack.setPrefSize(100,50);
@@ -154,6 +187,55 @@ public class Main extends Application {
         texto.setPrefSize(100,50);
 
         return texto;
+    }
+    private VBox textIngresarJugadores(){
+
+        Label texto = new Label("Ingrese los nombres de los jugadores");
+        texto.setFont(new Font("arial",14));
+
+        VBox panelV = new VBox(tituloMenuGenerala(),texto);
+        panelV.setSpacing(100);
+        panelV.setAlignment(Pos.TOP_CENTER);
+        
+        return panelV;
+    }
+    private HBox btnJugar(){
+        Button btnJugar = new Button("JUGAR");
+        btnJugar.setOnAction(event -> jugarGenerala());
+        btnJugar.setPrefSize(100,50);
+
+        HBox panelH = new HBox(btnJugar);
+        panelH.setPadding(new Insets(0,10,10,0));
+        panelH.setAlignment(Pos.BOTTOM_RIGHT);
+        return panelH;
+    }
+    private GridPane JugadoresInput(int cantJugadores){
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(30,0,0,0));
+        grid.setVgap(15);
+        grid.setHgap(15);
+        grid.setAlignment(Pos.TOP_CENTER);
+        
+        for(int i = 0; i < cantJugadores; i++){
+            Label jugador = new Label("Jugador "+(i+1)+":");
+            GridPane.setConstraints(jugador, 0, i);
+            TextField nombre = new TextField();
+            nombre.setPromptText("nombre");
+            GridPane.setConstraints(nombre, 1, i);
+            grid.getChildren().addAll(jugador,nombre);
+        }
+        return grid;
+
+    }
+    private HBox btnBackMenuGenerala(){
+        Button btnBack = new Button("<- BACK");
+        btnBack.setOnAction(event -> menuGenerala());
+        btnBack.setPrefSize(100,50);
+
+        HBox panelH = new HBox(btnBack);
+        panelH.setPadding(new Insets(0,0,10,10));
+        panelH.setAlignment(Pos.BOTTOM_LEFT);
+        return panelH;
     }
 
 }
