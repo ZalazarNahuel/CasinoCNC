@@ -12,10 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.HashSet;
+
 
 public class Main extends Application {
     Stage window;
-    Scene menuP,menuG,menuB;
+    Generala generala;
+
     public static void main(String[] args){
         launch(args);
     }
@@ -71,6 +74,8 @@ public class Main extends Application {
         window.setScene(menuBlackjack);
     }
     private void ingresarJugadores(int cantJugadores){
+        generala = new Generala();
+        generala.setJugadores(cantJugadores);
         BorderPane root = new BorderPane();
 
         root.setTop(textIngresarJugadores());
@@ -81,6 +86,9 @@ public class Main extends Application {
         Scene ingresarJugadores = new Scene(root,650,550);
 
         window.setScene(ingresarJugadores);
+    }
+    private void checkNombreJugadores(){
+
     }
     private void jugarGenerala(){
 
@@ -127,7 +135,7 @@ public class Main extends Application {
 
         VBox panelV = new VBox(btnGenerala,btnBlackjack,btnExit);
         panelV.setAlignment(Pos.CENTER);
-        panelV.setPadding(new Insets(150,0,0,20));
+        panelV.setPadding(new Insets(150,0,0,0));
         panelV.setSpacing(20);
 
         return panelV;
@@ -201,7 +209,7 @@ public class Main extends Application {
     }
     private HBox btnJugar(){
         Button btnJugar = new Button("JUGAR");
-        btnJugar.setOnAction(event -> jugarGenerala());
+        btnJugar.setOnAction(event -> checkNombreJugadores());
         btnJugar.setPrefSize(100,50);
 
         HBox panelH = new HBox(btnJugar);
@@ -223,6 +231,7 @@ public class Main extends Application {
             nombre.setPromptText("nombre");
             GridPane.setConstraints(nombre, 1, i);
             grid.getChildren().addAll(jugador,nombre);
+            generala.getJugador(i).setNombre(nombre.getText());
         }
         return grid;
 
