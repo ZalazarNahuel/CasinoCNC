@@ -46,7 +46,25 @@ public class Generala {
         return jugadores.get(i);
     }
 
-
+    public boolean nombreRepetido(){
+        for(int i = 0;i < getJugadores().size();i++){
+            for(int j = 0;j <getJugadores().size();j++){
+                if(i!=j){
+                    if(getJugador(i).getNombre().equalsIgnoreCase(getJugador(j).getNombre())){
+                        return true;
+                        
+                    } 
+                }
+            }
+        }
+        return false;
+    }
+    public boolean nombreVacio(){
+        for(int i = 0;i<getJugadores().size();i++){
+            if(getJugador(i).getNombre().isEmpty()) return true;
+        }
+        return false;
+    }
     public void tirarDados(HashSet<Integer> idDados){
         for (Integer id : idDados ) {
             this.setDado(id, this.rand());

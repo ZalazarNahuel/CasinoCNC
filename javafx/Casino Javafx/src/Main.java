@@ -12,12 +12,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
 public class Main extends Application {
     Stage window;
     Generala generala;
+    ArrayList<TextField> nombreJugadorGenerala;
 
     public static void main(String[] args){
         launch(args);
@@ -77,13 +79,50 @@ public class Main extends Application {
 
         window.setScene(ingresarJugadores);
     }
-    private void checkNombreJugadores(){
-
-    }
+    
     private void jugarGenerala(){
+        BorderPane root = new BorderPane();
 
+        root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
+        /*for(int i = 1;i<11;i++){//ronda
+            for(int j = 0;j<generala.getJugadores().size();j++){//jugador
+                HashSet<Integer> indice = new HashSet<>();
+
+                for(int z = 0; z < 3; z++){//intentos
+                    
+                }
+            }
+
+        }*/
+        root.setCenter(dados());
+        
+        Scene jugarGenerala = new Scene(root,650,550);
+
+        window.setScene(jugarGenerala);
     }
-   
+    //metodos
+    private void checkNombreJugadores(){
+        for(int i = 0;i < generala.getJugadores().size();i++){
+            generala.getJugador(i).setNombre(nombreJugadorGenerala.get(i).getText());
+        }//relleno los nombres con el input
+
+        boolean hayError = false;
+        if(generala.nombreVacio()){//checkeo que no haya un nombre vacio
+            hayError = true;
+            System.out.println("nombre vacio");
+        }
+        if(generala.nombreRepetido()){//checkeo que no haya un nombre repetido
+            hayError = true;
+            System.out.println("nombre repetido");
+        }
+        if(!hayError){
+            jugarGenerala();
+        }
+    }
+    private void tirarDados(HashSet<Integer> indice){
+        for()//pensar si esta funcion se hace en generala o aca 
+    }
+    //javafx
     private Background background(Image imagen){
         BackgroundImage backgroundImage = new BackgroundImage( imagen, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background background = new Background(backgroundImage);
@@ -168,6 +207,7 @@ public class Main extends Application {
         grid.setHgap(15);
         grid.setAlignment(Pos.TOP_CENTER);
         
+        nombreJugadorGenerala = new ArrayList<>();
         for(int i = 0; i < cantJugadores; i++){
             Label jugador = new Label("Jugador "+(i+1)+":");
             GridPane.setConstraints(jugador, 0, i);
@@ -175,7 +215,7 @@ public class Main extends Application {
             nombre.setPromptText("nombre");
             GridPane.setConstraints(nombre, 1, i);
             grid.getChildren().addAll(jugador,nombre);
-            generala.getJugador(i).setNombre(nombre.getText());
+            nombreJugadorGenerala.add(nombre);
         }
         return grid;
 
@@ -190,5 +230,23 @@ public class Main extends Application {
         panelH.setAlignment(Pos.BOTTOM_LEFT);
         return panelH;
     }
+    private HBox dados(){
+        ArrayList<Button> dados = new ArrayList<>();
+        HashSet<Integer> indices = new HashSet<>();//dados a tirar
+        HBox panelH = new HBox();
+        panelH.setPadding(new Insets(0,0,0,0));
+        panelH.setSpacing(5);
+        panelH.setAlignment(Pos.CENTER);
+        for(int i = 0;i<5;i++){
+            dados.add(new Button(Integer.toString(i+1)));
+            panelH.getChildren().add(dados.get(i));
+        }
+        Button tirar = new Button("Tirar");
+        tirar.setOnAction(event -> tirarDados(indices));
+        panelH.getChildren().add(tirar);
+        
+        return panelH;
+    }
+    
 
 }
