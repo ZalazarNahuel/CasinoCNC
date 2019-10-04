@@ -5,10 +5,12 @@ public class Jugador {
 
     private String nombre;
     private ArrayList<Punto> puntaje;
+    private int intento;
 
     public Jugador(String nombrex){
         nombre = nombrex;
         puntaje = new ArrayList<>();
+        intento = 0;
         setPuntos();
 
     }
@@ -23,6 +25,9 @@ public class Jugador {
         this.getPuntaje().add(new Punto("full",-1));
         this.getPuntaje().add(new Punto("poker",-1));
         this.getPuntaje().add(new Punto("generala",-1));
+    }
+    public void iniciarTurno(){
+        intento = 0;
     }
     public String getNombre(){
         return this.nombre;

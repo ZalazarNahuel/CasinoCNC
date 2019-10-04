@@ -49,7 +49,7 @@ public class Generala {
     public boolean nombreRepetido(){
         for(int i = 0;i < getJugadores().size();i++){
             for(int j = 0;j <getJugadores().size();j++){
-                if(i!=j){
+                if(i!=j && !getJugador(j).getNombre().isEmpty()){
                     if(getJugador(i).getNombre().equalsIgnoreCase(getJugador(j).getNombre())){
                         return true;
                         

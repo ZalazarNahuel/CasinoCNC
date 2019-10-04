@@ -81,21 +81,14 @@ public class Main extends Application {
     }
     
     private void jugarGenerala(){
+
+
+    }
+    private void mostrarDados(){
         BorderPane root = new BorderPane();
 
         root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
-        /*for(int i = 1;i<11;i++){//ronda
-            for(int j = 0;j<generala.getJugadores().size();j++){//jugador
-                HashSet<Integer> indice = new HashSet<>();
-
-                for(int z = 0; z < 3; z++){//intentos
-                    
-                }
-            }
-
-        }*/
         root.setCenter(dados());
-        
         Scene jugarGenerala = new Scene(root,650,550);
 
         window.setScene(jugarGenerala);
@@ -120,7 +113,8 @@ public class Main extends Application {
         }
     }
     private void tirarDados(HashSet<Integer> indice){
-        for()//pensar si esta funcion se hace en generala o aca 
+        generala.tirarDados(indice);
+       // jugarGenerala();
     }
     //javafx
     private Background background(Image imagen){
@@ -233,12 +227,13 @@ public class Main extends Application {
     private HBox dados(){
         ArrayList<Button> dados = new ArrayList<>();
         HashSet<Integer> indices = new HashSet<>();//dados a tirar
+        for(int i = 0;i<5;i++) indices.add(i);
         HBox panelH = new HBox();
         panelH.setPadding(new Insets(0,0,0,0));
         panelH.setSpacing(5);
         panelH.setAlignment(Pos.CENTER);
         for(int i = 0;i<5;i++){
-            dados.add(new Button(Integer.toString(i+1)));
+            dados.add(new Button(Integer.toString(generala.getDado(i))));
             panelH.getChildren().add(dados.get(i));
         }
         Button tirar = new Button("Tirar");
