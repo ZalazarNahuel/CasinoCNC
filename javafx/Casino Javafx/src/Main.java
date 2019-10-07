@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import javax.naming.Binding;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -81,7 +82,17 @@ public class Main extends Application {
     }
     
     private void jugarGenerala(){
+        BorderPane root = new BorderPane();
 
+        generala.checkTurno();
+        root.setCenter(dados());
+
+
+        root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
+
+        Scene jugarGenerala = new Scene(root,650,550);
+
+        window.setScene(jugarGenerala);
 
     }
     private void mostrarDados(){
@@ -114,7 +125,9 @@ public class Main extends Application {
     }
     private void tirarDados(HashSet<Integer> indice){
         generala.tirarDados(indice);
-       // jugarGenerala();
+        generala.getIndices().clear();
+        generala.sumarTurno();
+        jugarGenerala();
     }
     //javafx
     private Background background(Image imagen){
@@ -225,7 +238,6 @@ public class Main extends Application {
         return panelH;
     }
     private HBox dados(){
-        ArrayList<Button> dados = new ArrayList<>();
         HashSet<Integer> indices = new HashSet<>();//dados a tirar
         for(int i = 0;i<5;i++) indices.add(i);
         HBox panelH = new HBox();
@@ -233,14 +245,31 @@ public class Main extends Application {
         panelH.setSpacing(5);
         panelH.setAlignment(Pos.CENTER);
         for(int i = 0;i<5;i++){
-            dados.add(new Button(Integer.toString(generala.getDado(i))));
-            panelH.getChildren().add(dados.get(i));
+            Button numero = new Button(Integer.toString(generala.getDado(i)));
+           /* if(estadoBtnes.get(i)==true){
+                numero.setText("seleccionado");
+            }
+            estadoBtnes.add(false);
+            numero.setOnAction(event -> indices.add(j));//*/
+            panelH.getChildren().add(numero);
         }
         Button tirar = new Button("Tirar");
         tirar.setOnAction(event -> tirarDados(indices));
         panelH.getChildren().add(tirar);
         
         return panelH;
+    }
+    ArrayList<Boolean> estadoBtnes = new ArrayList<>();
+    private void btnNumero(int i){
+        if(estadoBtnes.get(i)==false){
+            generala.getIndices().add(i);
+            estadoBtnes.set(i,true);
+        }
+        else {
+            estadoBtnes.set(i,false);
+            generala.getIndices().remove(generala.getIndices().indexOf(i));
+        }
+        jugarGenerala();
     }
     
 

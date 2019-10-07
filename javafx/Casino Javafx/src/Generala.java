@@ -7,20 +7,63 @@ public class Generala {
     private ArrayList<Jugador> jugadores;
     private Jugador ganador;
     private int[] dados;
+    private ArrayList<Integer> indices;
+    private int turno;
+    private int jugadorActual;
 
     public Generala(){
         jugadores = new ArrayList<Jugador>();
         ganador = new Jugador(null);
         dados = new int[5];
+        indices = new ArrayList<>();
+        turno = 0;
+        jugadorActual = 0;
     }
 
     public void addJugador(Jugador j){
         jugadores.add(j);
     }
+
     public void setJugadores(int cantJugadores){
         for(int i = 0; i<cantJugadores; i++){
             jugadores.add(new Jugador(null));
         }
+    }
+    public int getTurno(){
+        return turno;
+    }
+    public void setTurno(int turnox){
+        turno = turnox;
+    }
+    public void checkTurno(){
+        if(getTurno() == 3){
+            setTurno(0);
+            cambiarJugadorActual();
+            System.out.println("cambio");
+        }
+        else{
+            System.out.println(getTurno());
+        }
+    }
+    public void sumarTurno(){
+        setTurno(getTurno()+1);
+    }
+    public int getJugadorActual(){
+        return jugadorActual;
+    }
+    public void setJugadorActual(int i){
+        jugadorActual = i;
+    }
+    public void cambiarJugadorActual(){
+        if(getJugadorActual() + 1 == getJugadores().size()){
+            setJugadorActual(0);
+        }
+        else{
+            setJugadorActual(getJugadorActual()+1);
+        }
+    }
+    public ArrayList<Integer> getIndices(){
+        return indices;
     }
 
     public int[] getDados() {
@@ -72,7 +115,7 @@ public class Generala {
     }
 
     public int rand(){
-        double num = (Math.random()*4+1);
+        double num = (Math.random()*6+1);
         return (int)num;
     }
 
