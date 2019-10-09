@@ -84,8 +84,10 @@ public class Main extends Application {
     private void jugarGenerala(){
         BorderPane root = new BorderPane();
 
-        generala.checkTurno();
+        
         root.setCenter(dados());
+        root.setBottom(opciones());
+        generala.checkTurno();//cambia el turno
 
 
         root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
@@ -94,15 +96,6 @@ public class Main extends Application {
 
         window.setScene(jugarGenerala);
 
-    }
-    private void mostrarDados(){
-        BorderPane root = new BorderPane();
-
-        root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
-        root.setCenter(dados());
-        Scene jugarGenerala = new Scene(root,650,550);
-
-        window.setScene(jugarGenerala);
     }
     //metodos
     private void checkNombreJugadores(){
@@ -123,11 +116,19 @@ public class Main extends Application {
             jugarGenerala();
         }
     }
-    private void tirarDados(HashSet<Integer> indice){
-        generala.tirarDados(indice);
-        generala.getIndices().clear();
+    private void tirarDados(){
+        generala.tirarDados();
+        generala.vaciarIndices();
         generala.sumarTurno();
         jugarGenerala();
+    }
+    private void addIndices(int j){
+        if(generala.getIndices().contains(j)){
+            generala.getIndices().remove(j);
+        }
+        else{
+            generala.addIndices(j);
+        }
     }
     //javafx
     private Background background(Image imagen){
@@ -238,39 +239,59 @@ public class Main extends Application {
         return panelH;
     }
     private HBox dados(){
-        HashSet<Integer> indices = new HashSet<>();//dados a tirar
-        for(int i = 0;i<5;i++) indices.add(i);
         HBox panelH = new HBox();
         panelH.setPadding(new Insets(0,0,0,0));
         panelH.setSpacing(5);
         panelH.setAlignment(Pos.CENTER);
         for(int i = 0;i<5;i++){
             Button numero = new Button(Integer.toString(generala.getDado(i)));
-           /* if(estadoBtnes.get(i)==true){
-                numero.setText("seleccionado");
+            int j = i;
+            if(generala.getTurno()!=0){
+                numero.setOnAction(event -> addIndices(j));
             }
-            estadoBtnes.add(false);
-            numero.setOnAction(event -> indices.add(j));//*/
+            /*if(generala.getIndices().contains(j){
+                //poner imagen
+            }
+            else{
+                //poner imagen 
+            }*/
             panelH.getChildren().add(numero);
         }
-        Button tirar = new Button("Tirar");
-        tirar.setOnAction(event -> tirarDados(indices));
-        panelH.getChildren().add(tirar);
+       
         
         return panelH;
     }
-    ArrayList<Boolean> estadoBtnes = new ArrayList<>();
-    private void btnNumero(int i){
-        if(estadoBtnes.get(i)==false){
-            generala.getIndices().add(i);
-            estadoBtnes.set(i,true);
-        }
-        else {
-            estadoBtnes.set(i,false);
-            generala.getIndices().remove(generala.getIndices().indexOf(i));
-        }
-        jugarGenerala();
-    }
     
+    private HBox tirar(){
+        HBox panelH = new HBox();
+        panelH.setAlignment(Pos.BOTTOM_RIGHT);
+        Button tirar = new Button("Tirar");
+        tirar.setOnAction(event -> tirarDados());
+        panelH.getChildren().add(tirar);
+        return panelH;
+    }
+    private HBox jugada(){
+        HBox panelH = new HBox();
+        panelH.setAlignment(Pos.BOTTOM_RIGHT);
+        panelH.setPadding(new Insets(0,40,10,0));
+        Button tirar = new Button("elegir jugada");
+        //tirar.setOnAction(event -> );
+        panelH.getChildren().add(tirar);
+        return panelH;
+    }
+    private HBox opciones(){
+        HBox panelH = new HBox();
+        panelH.setAlignment(Pos.BOTTOM_RIGHT);
+        if(generala.getTurno()==0){
+            panelH.getChildren().addAll(tirar());
+        }
+        if(generala.getTurno()<3 && generala.getTurno()>0){
+            panelH.getChildren().addAll(jugada(),tirar());
+        }
+        if(generala.getTurno()==3){
+            panelH.getChildren().addAll(jugada());
+        }
+        return panelH;
+    } 
 
 }

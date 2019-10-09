@@ -39,10 +39,9 @@ public class Generala {
         if(getTurno() == 3){
             setTurno(0);
             cambiarJugadorActual();
-            System.out.println("cambio");
         }
-        else{
-            System.out.println(getTurno());
+        if(getTurno()==0){
+            llenarIndices();
         }
     }
     public void sumarTurno(){
@@ -65,7 +64,15 @@ public class Generala {
     public ArrayList<Integer> getIndices(){
         return indices;
     }
-
+    public void addIndices(int x){
+        indices.add(x);
+    }
+    public void llenarIndices() {
+        for(int i = 0; i <5 ;i++) indices.add(i);
+    }
+    public void vaciarIndices(){
+        indices.clear();
+    }
     public int[] getDados() {
         return dados;
     }
@@ -108,8 +115,8 @@ public class Generala {
         }
         return false;
     }
-    public void tirarDados(HashSet<Integer> idDados){
-        for (Integer id : idDados ) {
+    public void tirarDados(){
+        for (Integer id : this.getIndices() ) {
             this.setDado(id, this.rand());
         }
     }
