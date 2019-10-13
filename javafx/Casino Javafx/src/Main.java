@@ -8,17 +8,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import javax.naming.Binding;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 
 public class Main extends Application {
     Stage window;
+    Scene escena;
     Generala generala;
     ArrayList<TextField> nombreJugadorGenerala;
 
@@ -41,9 +36,9 @@ public class Main extends Application {
         StackPane root = new StackPane();
         
         root.getChildren().addAll(btnesMenuPrincipal());
-        Scene menuPrincipal  = new Scene(root,650,550);
+        escena  = new Scene(root,650,550);
         root.setBackground(background( new Image("file:imagenes/menuPrincipal.jpg")));
-        window.setScene(menuPrincipal);
+        window.setScene(escena);
     }
 
     private void menuGenerala(){
@@ -55,18 +50,16 @@ public class Main extends Application {
         root.setTop(txtMenuGenerala());
        
         root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
-        Scene menuGenerala = new Scene(root,650,550);
-
-        window.setScene(menuGenerala);
+        escena.setRoot(root);
     }
     private void menuBlackjack(){
         StackPane root = new StackPane();
         root.setBackground(background(new Image("file:imagenes/menuBlackjack.jpg")));
-        Scene menuBlackjack = new Scene(root,650,550);
-        window.setScene(menuBlackjack);
+        escena.setRoot(root);
     }
     private void ingresarJugadores(int cantJugadores){
         generala = new Generala();
+        generala.llenarIndices();
         generala.setJugadores(cantJugadores);
         BorderPane root = new BorderPane();
 
@@ -76,26 +69,36 @@ public class Main extends Application {
 
         root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
         
-        Scene ingresarJugadores = new Scene(root,650,550);
-
-        window.setScene(ingresarJugadores);
+        escena.setRoot(root);
     }
     
     private void jugarGenerala(){
         BorderPane root = new BorderPane();
 
-        
         root.setCenter(dados());
         root.setBottom(opciones());
-        generala.checkTurno();//cambia el turno
-
+        root.setLeft(nombreJugador());
 
         root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
 
-        Scene jugarGenerala = new Scene(root,650,550);
+        escena.setRoot(root);
 
-        window.setScene(jugarGenerala);
+    }
+    private void elegirJugada(){
+        BorderPane root = new BorderPane();
+        root.setCenter(juegosNoHechos());
 
+        root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
+
+        escena.setRoot(root);
+    }
+    private void generalaFin(){
+        BorderPane root = new BorderPane();
+        root.setCenter(ganador());
+
+        root.setBackground(background(new Image("file:imagenes/menuGenerala.jpg")));
+
+        escena.setRoot(root);
     }
     //metodos
     private void checkNombreJugadores(){
@@ -122,12 +125,14 @@ public class Main extends Application {
         generala.sumarTurno();
         jugarGenerala();
     }
-    private void addIndices(int j){
-        if(generala.getIndices().contains(j)){
-            generala.getIndices().remove(j);
+    private void realizarJuego(NombreJuego juego){
+        generala.realizarJuegoJugador(generala.getJugadorActual(), juego);
+        generala.cambiarJugadorActual();
+        if(generala.checkFin()){
+            generalaFin();
         }
         else{
-            generala.addIndices(j);
+            jugarGenerala();
         }
     }
     //javafx
@@ -246,8 +251,8 @@ public class Main extends Application {
         for(int i = 0;i<5;i++){
             Button numero = new Button(Integer.toString(generala.getDado(i)));
             int j = i;
-            if(generala.getTurno()!=0){
-                numero.setOnAction(event -> addIndices(j));
+            if(generala.getIntentos()!=0){
+                numero.setOnAction(event -> generala.addIndices(j));
             }
             /*if(generala.getIndices().contains(j){
                 //poner imagen
@@ -275,23 +280,96 @@ public class Main extends Application {
         panelH.setAlignment(Pos.BOTTOM_RIGHT);
         panelH.setPadding(new Insets(0,40,10,0));
         Button tirar = new Button("elegir jugada");
-        //tirar.setOnAction(event -> );
+        tirar.setOnAction(event -> elegirJugada() );
         panelH.getChildren().add(tirar);
         return panelH;
     }
     private HBox opciones(){
         HBox panelH = new HBox();
         panelH.setAlignment(Pos.BOTTOM_RIGHT);
-        if(generala.getTurno()==0){
+        if(generala.getIntentos()==0){
             panelH.getChildren().addAll(tirar());
         }
-        if(generala.getTurno()<3 && generala.getTurno()>0){
+        if(generala.getIntentos()<3 && generala.getIntentos()>0){
             panelH.getChildren().addAll(jugada(),tirar());
         }
-        if(generala.getTurno()==3){
+        if(generala.getIntentos()==3){
             panelH.getChildren().addAll(jugada());
         }
         return panelH;
     } 
+    private VBox nombreJugador(){
+        VBox panelv = new VBox();
+        panelv.setAlignment(Pos.BOTTOM_LEFT);
+        Label txt = new Label(generala.getNombreJugador(generala.getJugadorActual()));
+        panelv.getChildren().add(txt);
+        return panelv;
+    }
+    private GridPane juegosNoHechos(){
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(30,0,0,0));
+        grid.setVgap(15);
+        grid.setHgap(15);
+        grid.setAlignment(Pos.TOP_CENTER);
+        
+        for(int i = 0; i < generala.juegosNoHechosJugador(generala.getJugadorActual()).size();i++){
+            Button btn = new Button();
+            Label txt = new Label(Integer.toString(generala.realizarJuego(generala.juegosNoHechosJugador(generala.getJugadorActual()).get(i))));
+            switch(generala.juegosNoHechosJugador(generala.getJugadorActual()).get(i)){ 
+                case UNO:
+                    btn = new Button("UNO");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.UNO));
+                    break;
+                case DOS:
+                    btn = new Button("DOS");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.DOS));
+                    break;
+                case TRES:
+                    btn = new Button("TRES");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.TRES));
+                    break;
+                case CUATRO:
+                    btn = new Button("CUATRO");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.CUATRO));
+                    break;
+                case CINCO:
+                    btn = new Button("CINCO");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.CINCO));
+                    break;
+                case SEIS:
+                    btn = new Button("SEIS");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.SEIS));
+                    break;
+                case ESCALERA:
+                    btn = new Button("ESCALERA");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.ESCALERA));
+                    break;
+                case FULL:
+                    btn = new Button("FULL");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.FULL));
+                    break;
+                case POKER:
+                    btn = new Button("POKER");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.POKER));
+                    break;
+                case GENERALA:
+                    btn = new Button("GENERALA");
+                    btn.setOnAction(e -> realizarJuego(NombreJuego.GENERALA));
+                    break;   
+            }
+            GridPane.setConstraints(btn, 0, i);
+            GridPane.setConstraints(txt, 1, i);
+            grid.getChildren().addAll(btn,txt);
+        }
+
+        return grid;
+    }
+    private VBox ganador(){
+        VBox panelv  = new VBox();
+        panelv.setAlignment(Pos.CENTER);
+        Label txt = new Label("El ganador es: "+ generala.getGanador().getNombre());
+        panelv.getChildren().add(txt);
+        return panelv;
+    }
 
 }

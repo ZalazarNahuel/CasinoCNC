@@ -1,0 +1,3 @@
+enum NombreJuego{
+    UNO, DOS, TRES, CUATRO, CINCO, SEIS, ESCALERA, FULL, POKER, GENERALA 
+}

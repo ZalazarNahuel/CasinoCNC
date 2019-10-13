@@ -1,16 +1,22 @@
+
 public class Punto {
-    String nombre;
+    NombreJuego nombre;
     int punto;
 
-    public Punto (String nombrex, int puntox){
+    public Punto (NombreJuego nombrex){
         nombre = nombrex;
-        punto = puntox;
+        punto = -1; 
     }
 
-    public String getNombre(){
+    public NombreJuego getNombre(){
         return this.nombre;
     }
     public int getPunto(){
         return this.punto;
     }
+    public void setPunto(int puntox){
+        this.punto = puntox;
+    }
+
+    
 }
