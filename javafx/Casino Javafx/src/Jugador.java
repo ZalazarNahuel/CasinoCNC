@@ -48,6 +48,7 @@ public class Jugador {
             }
         }
     }
+
     public ArrayList<Punto> getPuntaje(){
         return this.puntaje;
     }
